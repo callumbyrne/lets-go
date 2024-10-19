@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/callumbyrne/lets-go/snippetbox/internal/models"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -14,6 +15,7 @@ import (
 type application struct {
 	errorLog *log.Logger
 	infoLog  *log.Logger
+	snippets *models.SnippetModel
 }
 
 // responsibilities of the main function are limited to:
@@ -40,6 +42,7 @@ func main() {
 	app := &application{
 		errorLog: errorLog,
 		infoLog:  infoLog,
+		snippets: &models.SnippetModel{DB: db},
 	}
 
 	srv := &http.Server{
