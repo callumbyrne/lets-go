@@ -9,6 +9,7 @@ import (
 	"os"
 
 	"github.com/callumbyrne/lets-go/snippetbox/internal/models"
+	"github.com/go-playground/form/v4"
 	_ "github.com/go-sql-driver/mysql"
 )
 
@@ -18,6 +19,7 @@ type application struct {
 	infoLog       *log.Logger
 	snippets      *models.SnippetModel
 	templateCache map[string]*template.Template
+	formDecoder   *form.Decoder
 }
 
 // responsibilities of the main function are limited to:
@@ -46,12 +48,16 @@ func main() {
 		errorLog.Fatal(err)
 	}
 
+	// initialize a decoder instance
+	formDecoder := form.NewDecoder()
+
 	// initialize a new instance of our application struct containing the dependencies
 	app := &application{
 		errorLog:      errorLog,
 		infoLog:       infoLog,
 		snippets:      &models.SnippetModel{DB: db},
 		templateCache: templateCache,
+		formDecoder:   formDecoder,
 	}
 
 	srv := &http.Server{
